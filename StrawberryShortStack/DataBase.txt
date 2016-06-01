@@ -3,3 +3,6 @@ cake,eggs,buter,milk,flour
 sadness,computer science,homework,yasamin
 bird,fly,nest,worm
 water,h,2,o
+strawberry guacamole,avocado,salt,lime juice,red onion,strawberry,cranberry,cilantro
+grilled sweet potatoes,sweet potato,olive oil,kosher salt
+sweet potato dressing,cilantro,lime zest,lime juice,olive oil,salt

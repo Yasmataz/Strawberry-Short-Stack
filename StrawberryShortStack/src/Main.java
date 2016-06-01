@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -14,7 +15,6 @@ public class Main {
 			key = in.nextLine();
 			searchIngredient(key);
 		}
-		
 		System.out.println(searchRecipe());
 	}
 
@@ -33,7 +33,8 @@ public class Main {
 			A:for (int j = 0; j < 19; j++) {
 				if(dataBase[i][j+1] != null)
 					break A;
-				return dataBase[i][0];
+				if(j == 18)
+					return dataBase[i][0];
 			}
 		}
 		return null;
