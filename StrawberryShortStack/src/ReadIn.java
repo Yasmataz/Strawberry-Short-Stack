@@ -9,23 +9,43 @@ import java.util.Arrays;
 
 public class ReadIn {
 	private static String[][] dataBase;
+	private static String[] recipes;
 
-	public ReadIn() {
+	/*public static void main(String[] args) {
 		LineNumberReader lnr;
 		try {
 			lnr = new LineNumberReader(new FileReader("DataBase.txt"));
 			lnr.skip(Long.MAX_VALUE);
 			dataBase = new String[lnr.getLineNumber() + 1][20];
+			recipes = new String[10];
 			lnr.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		read();
+		readIngredient();
+		readRecipe();
+	}*/
+	
+	public ReadIn() {
+		LineNumberReader lnr;
+		try {
+			lnr = new LineNumberReader(new FileReader("DataBase.txt"));
+			lnr.skip(Long.MAX_VALUE);
+			dataBase = new String[lnr.getLineNumber() + 1][20];
+			recipes = new String[10];
+			lnr.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		readIngredient();
+		readRecipe();
 	}
 
-	private void read() {
+	private static void readIngredient() {
 		String csvFile = "DataBase.txt";
 		BufferedReader br = null;
 		String line = "";
@@ -52,6 +72,7 @@ public class ReadIn {
 					}
 				}
 			}
+			br.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -60,7 +81,33 @@ public class ReadIn {
 	//	System.out.println(Arrays.deepToString(dataBase));
 	}
 	
+	private static void readRecipe() {
+		String csvFile = "instructions.txt";
+		BufferedReader br = null;
+		String line = "";
+		//String cvsSplitBy = "END";
+	//	String[] sep = null;
+		try {
+			br = new BufferedReader(new FileReader(csvFile));
+			for (int i = 0; i < recipes.length; i++) {
+				if ((line = br.readLine()) != null) {
+					recipes[i] = line;
+				}
+			}
+			System.out.println(Arrays.toString(recipes));
+			br.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public String[][] getData(){
 		return dataBase;
 	}
+	public String[] getRecipes(){
+		return recipes;
+	}
+	
 }

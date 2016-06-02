@@ -3,22 +3,40 @@ import java.util.Scanner;
 
 public class Main {
 	private static String[][] dataBase;
+	private static int[] recipeIndex;
+	private static String[] recipes;
 
+	static int line = 0;
+	
 	public static void main(String[] args) {
 		ReadIn read1 = new ReadIn();
 		dataBase = read1.getData();
-		searchRecipe();
+		recipes = read1.getRecipes();
 		Scanner in = new Scanner(System.in);
+		recipeIndex = new int[10];
+		for (int i = 0; i < recipeIndex.length; i++) {
+			recipeIndex[i] = -1;
+		}
 		
 		String key = "";
 		while(!key.equals("end")) {
 			key = in.nextLine();
 			searchIngredient(key);
 		}
-		System.out.println(searchRecipe());
+		int i = 0;
+		while(line!=dataBase.length){
+			int pos = searchRecipe(line);
+			if (pos!=-1) {
+				System.out.println(dataBase[pos][0]);
+				recipeIndex[i] = pos;
+			}
+			i++;
+		}
+		getRecipes();
+	in.close();
 	}
 
-	public static void searchIngredient(String ingredient) {
+	public static void searchIngredient(String ingredient) {//finds and sets all searched ingredients to null
 		for (int i = 0; i < dataBase.length; i++) {
 			for (int j = 0; j < dataBase[0].length; j++) {
 				if(dataBase[i][j] != null && dataBase[i][j].equals(ingredient)) {
@@ -28,15 +46,23 @@ public class Main {
 		}
 	}
 	
-	public static String searchRecipe() {
-		for (int i = 0; i < dataBase.length; i++) {
+	public static int searchRecipe(int start) {//Returns i index of recipies with all null arrays
+		for (int i = start; i < dataBase.length; i++) {
+			line++;
 			A:for (int j = 0; j < 19; j++) {
 				if(dataBase[i][j+1] != null)
 					break A;
 				if(j == 18)
-					return dataBase[i][0];
+					//return dataBase[i][0];
+					return i;
 			}
 		}
-		return null;
+		return -1;
+	}
+	
+	public static void getRecipes() {
+		for (int i = 0; i < recipes.length; i++) {
+			//System.out.println(recipes[recipeIndex[i]]);
+		}
 	}
 }
