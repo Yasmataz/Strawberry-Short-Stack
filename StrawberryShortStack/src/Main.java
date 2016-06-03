@@ -13,7 +13,8 @@ public class Main {
 		dataBase = read1.getData();
 		recipes = read1.getRecipes();
 		Scanner in = new Scanner(System.in);
-		recipeIndex = new int[10];
+		recipeIndex = new int[read1.getRecipes().length];
+		
 		for (int i = 0; i < recipeIndex.length; i++) {
 			recipeIndex[i] = -1;
 		}
@@ -33,6 +34,17 @@ public class Main {
 			i++;
 		}
 		getRecipes();
+		
+		line=0;
+		while(line!=dataBase.length){
+			int pos = suggestedRecipes(line);
+			if (pos!=-1) {
+				System.out.println("suggested: ");
+				System.out.println(dataBase[pos][0]);
+				//recipeIndex[i] = pos;
+			}
+			i++;
+		}
 	in.close();
 	}
 
@@ -60,9 +72,30 @@ public class Main {
 		return -1;
 	}
 	
+	public static int suggestedRecipes(int start) {
+		int missingCnt = 0;
+		for (int i = start; i < dataBase.length; i++) {
+			line++;
+			A:for (int j = 0; j < 19; j++) {
+				if(dataBase[i][j+1] != null) {
+					missingCnt+=1;
+					if(missingCnt >1) {
+						missingCnt=0;
+						break A;
+					}
+				}
+				if(j == 18 && missingCnt ==1)
+					//return dataBase[i][0];
+					return i;
+			}
+		}
+		return -1;
+	}
+	
 	public static void getRecipes() {
 		for (int i = 0; i < recipes.length; i++) {
-			//System.out.println(recipes[recipeIndex[i]]);
+			if(recipeIndex[i]!= -1)
+				System.out.println(recipes[recipeIndex[i]]);
 		}
 	}
 }
