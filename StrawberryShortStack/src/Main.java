@@ -32,7 +32,7 @@ public class Main {
 		recipeIndex = new int[read1.getRecipes().length];// index of recipes with no missing ingredients
 		missingRecipeIndex = new int[read1.getRecipes().length];// index of recipes with one missing ingredient
 
-		for (int i = 0; i < recipeIndex.length; i++) {
+		for (int i = 0; i < recipeIndex.length; i++) {//must be set to -1, 0 is an index
 			recipeIndex[i] = -1;
 			missingRecipeIndex[i] = -1;
 		}
