@@ -1,5 +1,8 @@
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
@@ -37,7 +40,7 @@ public class Main {
 			missingRecipeIndex[i] = -1;
 		}
 
-		saveIngredients();
+		loadIngredients();
 
 		int i = 0;
 		while (line != dataBase.length) {// Find recipes with no missing ingredients
@@ -62,14 +65,46 @@ public class Main {
 		}
 		getRecipes(missingRecipeIndex);
 	}
+	
+	public static void loadIngredients() {
+		Scanner in = new Scanner(System.in);
+		System.out.println("Intredients: ");
+		String csvFile = "Pantry.txt";
+		BufferedReader br = null;
+		String line = "";
+		String[] sep = null;
+		try {
+			br = new BufferedReader(new FileReader(csvFile));
+			for (int i = 0; i < dataBase.length; i++) {
+				if ((line = br.readLine()) != null) {
+					// use comma as separator
+					sep = line.split(",");
+				}
+				if(sep!=null) {
+					for (int j = 0; j < sep.length; j++) {
+							System.out.println(sep[j]);
+					}
+				}
+			}
+			System.out.println("Add Ingredient? y/n");
+			if(in.next().equals("y")) {
+				//br.close();
+				addIngredients();
+			}	
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
-	public static void saveIngredients() { // Saves ingredients in a file
+	public static void addIngredients() { // Appends ingredients to a file
 		Scanner in = new Scanner(System.in);
 		String key = "";
 		try {
 			File file;
 			file = new File("pantry.txt");
-			FileWriter fw = new FileWriter(file.getAbsoluteFile());
+			FileWriter fw = new FileWriter(file.getAbsoluteFile(),true);
 			BufferedWriter bw = new BufferedWriter(fw);
 
 			while (!key.equals("end")) {
@@ -78,8 +113,8 @@ public class Main {
 				if (!file.exists())
 					file.createNewFile();
 				if (!key.equals("end")) {
-					bw.append(key);
-					bw.append("\n");
+					bw.append(key+",");
+					//bw.append("\n");
 				}
 				searchIngredient(key);
 			}
@@ -88,7 +123,7 @@ public class Main {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		in.close();
+		//in.close();
 	}
 
 	public static void searchIngredient(String ingredient) {// finds and sets all searched ingredients to null
