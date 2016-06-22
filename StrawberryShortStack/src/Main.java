@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.awt.*;
@@ -60,6 +61,7 @@ public class Main {
 			i++;
 		}
 		getRecipes(missingRecipeIndex);
+		removeIngredient();
 	}
 	
 	public static void loadIngredients() {
@@ -199,16 +201,43 @@ public class Main {
 	}
 
 	public static void addRecipeInstructions() {
-		//Still need to finish this
+		
 	}
 	
-	public static void searchRecipe() {//Searches for recipe based on search name
+	public static void removeIngredient() {
+		System.out.println("Remove ingredient");
 		Scanner in = new Scanner(System.in);
-		String search = in.nextLine();
-		for (int i = 0; i < dataBase.length; i++) {
-			if(dataBase[i][0].equals(search));
-				System.out.println(recipes[i]);
+		String toRemove = in.nextLine();
+		int index = -1;
+		for (int i = 0; i < pantry.length; i++) {
+			if(pantry[i].equals(toRemove)) {
+				index = i;
+				pantry[i] = null;
+			}
+		}
+		
+		//Rewrite the file withhout ingredient being removed
+		PrintWriter writer;
+		try {
+			File file;
+			file = new File("pantry.txt");
+			FileWriter fw = new FileWriter(file.getAbsoluteFile());
+			BufferedWriter bw = new BufferedWriter(fw);
+
+			fw.write("");
 			
+			for (int i = 0; i < pantry.length; i++) {
+				// if file doesnt exists, then create it
+				if (!file.exists())
+					file.createNewFile();
+				if (pantry[i] != null) {
+					bw.append(pantry[i]+",");
+				}
+			}
+			bw.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 }

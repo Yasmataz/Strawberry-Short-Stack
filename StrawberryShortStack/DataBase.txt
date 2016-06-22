@@ -1,4 +1,4 @@
-cat,fluff,cute,
+cat,fluff,cute
 cake,eggs,butter,milk,flour
 sadness,computer science,homework,yasamin
 bird,fly,nest,worm
