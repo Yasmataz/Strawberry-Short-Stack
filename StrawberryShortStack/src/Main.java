@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.Scanner;
 import java.awt.*;
 import java.awt.event.*;
@@ -18,8 +19,10 @@ public class Main {
 	private static int[] missingRecipeIndex;
 	private static String[] recipes;
 	private static String[] pantry;
+	private static String missingIng;
 	private static ReadIn read1;
 	private static Interfacing interfacing;
+	private static LinkedList<String> shoppingList = new LinkedList<String>();
 	static int line = 0;
 
 	public static void main(String[] args) {
@@ -35,10 +38,12 @@ public class Main {
 			missingRecipeIndex[i] = -1;
 		}
 
-		loadIngredients();
-		for (int i = 0; i < pantry.length; i++) {
+		loadIngredients(); // Add ingredients
+		
+		for (int i = 0; i < pantry.length; i++) {// sets all ingredients you have to null
 			searchIngredient(pantry[i]);
 		}
+		
 		int i = 0;
 		while (line != dataBase.length) {// Find recipes with no missing ingredients
 			int pos = searchRecipe(line);
@@ -48,20 +53,25 @@ public class Main {
 			}
 			i++;
 		}
-		getRecipes(recipeIndex);
+		getRecipes(recipeIndex); //prints all recipes in the array
 
 		line = 0;
+		Scanner in = new Scanner(System.in);
 		while (line != dataBase.length) {// Finds recipes with 1 ingredient missing
 			int pos = suggestedRecipes(line);
 			if (pos != -1) {
 				System.out.println("suggested: ");
 				System.out.println(dataBase[pos][0]);
 				missingRecipeIndex[i] = pos;
+				
+				System.out.println("Add ingredient to shopping list? y/n");
+				if (in.nextLine().equals("y")) {
+					shoppingList.add(missingIng);
+				}
 			}
 			i++;
 		}
-		getRecipes(missingRecipeIndex);
-		removeIngredient();
+		getRecipes(missingRecipeIndex); //prints all recipes in the array
 	}
 	
 	public static void loadIngredients() {
@@ -73,10 +83,7 @@ public class Main {
 		try {
 			br = new BufferedReader(new FileReader(csvFile));
 			while ((line = br.readLine()) != null) {
-				//if ((line = br.readLine()) != null) {
-					// use comma as separator
-					pantry = line.split(",");
-				//}
+				pantry = line.split(",");
 				if(pantry!=null) {
 					for (int j = 0; j < pantry.length; j++) {
 							System.out.println(pantry[j]);
@@ -89,7 +96,9 @@ public class Main {
 				addIngredients();
 			}	
 			else {
-				return;
+				System.out.println("Remove Ingredient? y/n");
+				if(in.next().equals("y"))
+					removeIngredient();
 			}
 				
 		} catch (FileNotFoundException e) {
@@ -154,7 +163,7 @@ public class Main {
 
 	public static int suggestedRecipes(int start) {// Finds all recipes with 1 missing ingredient
 		int missingCnt = 0;// Number of missing ingredients
-		String missingIng = "";// The missing ingredient
+		missingIng = "";// The missing ingredient
 		for (int i = start; i < dataBase.length; i++) {
 			line++;
 			A: for (int j = 0; j < 19; j++) {
