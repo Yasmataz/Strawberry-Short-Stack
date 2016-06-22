@@ -16,20 +16,14 @@ public class Main {
 	private static int[] recipeIndex;
 	private static int[] missingRecipeIndex;
 	private static String[] recipes;
-
+	private static String[] pantry;
+	private static ReadIn read1;
+	private static Interfacing interfacing;
 	static int line = 0;
 
 	public static void main(String[] args) {
-
-		Gui frame = new Gui();
-		frame.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				System.exit(0);
-			}
-		});
-		frame.setSize(500, 500);
-
-		ReadIn read1 = new ReadIn();
+		read1 = new ReadIn();
+		interfacing = new Interfacing();
 		dataBase = read1.getData(); // 2D array of all ingredients
 		recipes = read1.getRecipes(); // array of all recipes
 		recipeIndex = new int[read1.getRecipes().length];// index of recipes with no missing ingredients
@@ -41,7 +35,9 @@ public class Main {
 		}
 
 		loadIngredients();
-
+		for (int i = 0; i < pantry.length; i++) {
+			searchIngredient(pantry[i]);
+		}
 		int i = 0;
 		while (line != dataBase.length) {// Find recipes with no missing ingredients
 			int pos = searchRecipe(line);
@@ -72,17 +68,16 @@ public class Main {
 		String csvFile = "Pantry.txt";
 		BufferedReader br = null;
 		String line = "";
-		String[] sep = null;
 		try {
 			br = new BufferedReader(new FileReader(csvFile));
-			for (int i = 0; i < dataBase.length; i++) {
-				if ((line = br.readLine()) != null) {
+			while ((line = br.readLine()) != null) {
+				//if ((line = br.readLine()) != null) {
 					// use comma as separator
-					sep = line.split(",");
-				}
-				if(sep!=null) {
-					for (int j = 0; j < sep.length; j++) {
-							System.out.println(sep[j]);
+					pantry = line.split(",");
+				//}
+				if(pantry!=null) {
+					for (int j = 0; j < pantry.length; j++) {
+							System.out.println(pantry[j]);
 					}
 				}
 			}
@@ -91,6 +86,10 @@ public class Main {
 				//br.close();
 				addIngredients();
 			}	
+			else {
+				return;
+			}
+				
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -108,6 +107,7 @@ public class Main {
 			BufferedWriter bw = new BufferedWriter(fw);
 
 			while (!key.equals("end")) {
+				System.out.println("enter Ingredient ");
 				key = in.nextLine();
 				// if file doesnt exists, then create it
 				if (!file.exists())
@@ -116,7 +116,7 @@ public class Main {
 					bw.append(key+",");
 					//bw.append("\n");
 				}
-				searchIngredient(key);
+				//searchIngredient(key);
 			}
 			bw.close();
 
@@ -165,6 +165,7 @@ public class Main {
 					}
 				}
 				if (j == 18 && missingCnt == 1) {
+					interfacing.addToShoppingList(missingIng);
 					System.out.println("missing " + missingIng);
 					return i; // returns index of recipe with missing ingredient
 				}
@@ -177,6 +178,37 @@ public class Main {
 		for (int i = 0; i < recipes.length; i++) {
 			if (recipeIndex[i] != -1)
 				System.out.println(recipes[recipeIndex[i]]);
+		}
+	}
+
+	public static void addRecipeIngredients() {
+		String[] ingredients = new String[20];
+		Scanner in = new Scanner(System.in);
+		for (int i = 0; i < ingredients.length; i++) {
+			String word = in.nextLine();
+			if(!word.equals("end")) {
+				ingredients[i] = in.nextLine();
+			}
+			else {
+				for (int j = 0; j < ingredients.length-i; j++) {
+					ingredients[i+j] = null;
+				}
+			}
+		}
+		read1.writeIngredients(ingredients);
+	}
+
+	public static void addRecipeInstructions() {
+		//Still need to finish this
+	}
+	
+	public static void searchRecipe() {//Searches for recipe based on search name
+		Scanner in = new Scanner(System.in);
+		String search = in.nextLine();
+		for (int i = 0; i < dataBase.length; i++) {
+			if(dataBase[i][0].equals(search));
+				System.out.println(recipes[i]);
+			
 		}
 	}
 }

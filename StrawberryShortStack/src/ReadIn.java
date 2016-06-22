@@ -4,8 +4,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
+import java.io.RandomAccessFile;
 import java.nio.file.*;
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class ReadIn {
 	private static String[][] dataBase;
@@ -29,6 +31,7 @@ public class ReadIn {
 	}*/
 	
 	public ReadIn() {
+	//public static void main(String[] args) {
 		LineNumberReader lnr;
 		try {
 			lnr = new LineNumberReader(new FileReader("DataBase.txt"));
@@ -41,36 +44,23 @@ public class ReadIn {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		readIngredient();
+		//readIngredient();
+		//readRecipe();
+		//	readCsv();
 		readRecipe();
+		readIngredient(0);
 	}
-
-	private static void readIngredient() {
-		String csvFile = "DataBase.txt";
+	
+	private static void readCsvIngredient() {//reads in books from text file
+		String fileName = "DataBase.txt";
 		BufferedReader br = null;
 		String line = "";
-		String cvsSplitBy = ",";
-		String[] sep = null;
+
 		try {
-			br = new BufferedReader(new FileReader(csvFile));
-			for (int i = 0; i < dataBase.length; i++) {
-				
-				if ((line = br.readLine()) != null) {
-					// use comma as separator
-					sep = line.split(cvsSplitBy);
-					dataBase[i][0] = sep[0];
-					System.out.println(Arrays.toString(sep));
-
-				}
-
-				for (int j = 0; j < dataBase[0].length; j++) {
-					try {
-					dataBase[i][j+1] = sep[j+1];
-					} catch(IndexOutOfBoundsException e) {
-						if(j<19)
-							dataBase[i][j+1] = null;
-					}
-				}
+			br = new BufferedReader(new FileReader(fileName));
+			while ((line = br.readLine()) != null) {
+				String[] ingredients = line.split(",");
+				writeIngredients(ingredients);
 			}
 			br.close();
 		} catch (FileNotFoundException e) {
@@ -78,15 +68,87 @@ public class ReadIn {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	//	System.out.println(Arrays.deepToString(dataBase));
+	}
+	
+	public static void writeIngredients(String[] ingredients) {// Writes to binary RAF file
+		String fileName = "InterSearch.txt";
+		try {
+			RandomAccessFile raf = new RandomAccessFile(fileName, "rw");
+			raf.seek(raf.length());
+			int ingLen = ingredients.length;
+			
+			int padIng = 0;
+			if(ingLen>20)
+				ingLen = 20;
+			else
+				padIng = 20-ingLen;
+			for (int j = 0; j < ingredients.length; j++) {
+				int nameLen = ingredients[j].length(); // determine if there are more than 20 characters
+				int padLen = 0; // calculate the number of blanks that need to be
+				if (nameLen > 20) // added to maintain a length of 20
+					nameLen = 20;
+				else
+					padLen = 20 - nameLen;
+				for (int i = 0; i < ingredients[j].length(); i++)
+					raf.writeChar(ingredients[j].charAt(i));
+				if (padLen > 0) { // write the extra blanks
+					for (int i = 0; i < padLen; i++)
+						raf.writeChar(' ');
+				}
+			}
+			for (int j = 0; j < padIng; j++) {
+					for (int i = 0; i < 20; i++)
+						raf.writeChar('*');
+				}
+			raf.close();
+
+		} catch (FileNotFoundException ex) {
+			System.out.println("Unable to open file '" + fileName + "'");
+		} catch (IOException ex) {
+			System.out.println("Error reading file '" + fileName + "'");
+		}
+
+	}
+	
+	private static void readIngredient(int seek) {//Reads from RAF file
+		String fileName = "InterSearch.txt";
+		try {
+			RandomAccessFile raf = new RandomAccessFile(fileName, "rw");
+			raf.seek(seek);
+			String temp = "";
+			
+			for (int k = 0; k < dataBase.length; k++) {//when youre inefficient af
+				for (int i = 0; i < 20; i++) {
+					for (int j = 0; j < 20; j++) {
+						char nextChar = raf.readChar();
+						if (nextChar != ('*')) {
+							temp = temp + nextChar;
+						}
+					}
+					//System.out.println(temp.trim());
+					if(temp.trim().equals(""))
+						dataBase[k][i] = null;
+					else
+						dataBase[k][i] = temp.trim();
+					temp = "";
+				}
+			}
+			System.out.println(Arrays.deepToString(dataBase));
+			
+		} catch (FileNotFoundException e) {
+			System.out.println("file not found");
+			e.printStackTrace();
+		} catch (IOException e) {
+			System.out.println("erroe");
+			e.printStackTrace();
+		}
+
 	}
 	
 	private static void readRecipe() {
 		String csvFile = "instructions.txt";
 		BufferedReader br = null;
 		String line = "";
-		//String cvsSplitBy = "END";
-	//	String[] sep = null;
 		try {
 			br = new BufferedReader(new FileReader(csvFile));
 			for (int i = 0; i < recipes.length; i++) {
@@ -103,9 +165,87 @@ public class ReadIn {
 		}
 	}
 	
+	private static void readRecipe(int seek) {
+		String fileName = "InterSearch.txt";
+		try {
+			RandomAccessFile raf = new RandomAccessFile(fileName, "rw");
+			raf.seek(seek);
+			String temp = "";
+			for (int k = 0; k < 500; k++) {//when youre inefficient af
+				char nextChar = raf.readChar();
+				if (nextChar != ('*')) {
+					temp = temp + nextChar;
+				}
+			}
+			//System.out.println(temp.trim());
+			if(temp.trim().equals(""))
+			//	dataBase[k][i] = null;
+			//else
+			//	dataBase[k][i] = temp.trim();
+			temp = "";
+			
+		} catch (FileNotFoundException e) {
+			System.out.println("file not found");
+			e.printStackTrace();
+		} catch (IOException e) {
+			System.out.println("erroe");
+			e.printStackTrace();
+		}
+	}
+
+	private static void readCsvRecipe() {//reads in books from text file
+		String fileName = "Instructions.txt";
+		BufferedReader br = null;
+		String line = "";
+
+		try {
+			br = new BufferedReader(new FileReader(fileName));
+			while ((line = br.readLine()) != null) {
+				String ingredients = line;
+				writeRecipe(ingredients);
+			}
+			br.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public static void writeRecipe(String instructions) {// Writes to binary RAF file
+		String fileName = "InterSearch.txt";
+		try {
+			RandomAccessFile raf = new RandomAccessFile(fileName, "rw");
+			raf.seek(raf.length());
+			int stringLength = instructions.length();
+			
+			int pading = 0;
+			if(stringLength>500)
+				stringLength = 500;
+			else {
+				pading = 500-stringLength;
+				raf.writeUTF(instructions);
+			}
+			
+			for (int i = 0; i < pading; i++) {
+					raf.writeChar('*');
+			}
+			
+			raf.close();
+
+		} catch (FileNotFoundException ex) {
+			System.out.println("Unable to open file '" + fileName + "'");
+		} catch (IOException ex) {
+			System.out.println("Error reading file '" + fileName + "'");
+		}
+
+	}
+	
 	public String[][] getData(){
 		return dataBase;
 	}
+	
 	public String[] getRecipes(){
 		return recipes;
 	}
