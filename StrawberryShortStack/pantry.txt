@@ -1,1 +1,1 @@
-eggs,cat,fluff,cute,h,2,butter,
+eggs,fluff,cute,h,2,butter,

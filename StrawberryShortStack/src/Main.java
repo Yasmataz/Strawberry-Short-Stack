@@ -219,6 +219,10 @@ public class Main {
 				System.out.println(recipes[i]);
 				System.out.println("Remove recipe? y/n");
 				if(in.nextLine().equals("y")) {
+					for (int j = 0; j < dataBase[0].length; j++) {
+						dataBase[i][j] = null;
+					}
+					recipes[i] = null;
 					read1.removeRecipe(i);
 				}
 			}

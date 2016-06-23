@@ -141,7 +141,7 @@ public class ReadIn {
 			raf.seek(seek);
 			String temp = "";
 			int index = 0;
-			boolean nextRecipe = true; //have you reached the next recipe?
+			boolean nextRecipe = false; //have you reached the next recipe?
 			for (int k = 0; k < raf.length()/2; k++) {
 				char nextChar = raf.readChar();
 				if (nextChar != ('*')) {
