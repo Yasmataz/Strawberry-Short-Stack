@@ -1,3 +1,11 @@
+/*
+ * Group: Yasamin Ahmadzadeh, Julisa Blaszkow, Brandyn Poniewozik
+ * Date: 23/06/2016
+ * Class: ICS4U
+ * Description: Strawberry Short Stack - a program that allows you to make
+ * cooking fun and easy by letting you search by the ingredients you have,
+ * search the web, and add your own recipes
+ */
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
