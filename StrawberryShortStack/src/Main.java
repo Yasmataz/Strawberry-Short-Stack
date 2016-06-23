@@ -208,10 +208,28 @@ public class Main {
 			}
 		}
 		read1.writeIngredients(ingredients);
+		addRecipeInstructions();
 	}
 
+	public static void searchRecipe() {//Searches for recipe based on search name
+		Scanner in = new Scanner(System.in);
+		String search = in.nextLine();
+		for (int i = 0; i < dataBase.length; i++) {
+			if(dataBase[i][0].equals(search)) {
+				System.out.println(recipes[i]);
+				System.out.println("Remove recipe? y/n");
+				if(in.nextLine().equals("y")) {
+					read1.removeRecipe(i);
+				}
+			}
+		}
+	}
+	
 	public static void addRecipeInstructions() {
-		
+		Scanner in = new Scanner(System.in);
+		System.out.println("Enter instructions");
+		String instructions = in.nextLine();
+		read1.writeRecipe(instructions);
 	}
 	
 	public static void removeIngredient() {

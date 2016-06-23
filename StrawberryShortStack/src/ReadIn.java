@@ -218,6 +218,22 @@ public class ReadIn {
 
 	}
 	
+	public void removeRecipe(int index) {
+		String fileName = "InstructionsRaf.pld";
+		try {
+			RandomAccessFile raf = new RandomAccessFile(fileName, "rw");
+			raf.seek(index*(raf.length()/recipes.length));
+			for (int i = 0; i < 500; i++) {
+				raf.writeChar('*');
+			}
+			
+		} catch (FileNotFoundException ex) {
+			System.out.println("Unable to open file '" + fileName + "'");
+		} catch (IOException ex) {
+			System.out.println("Error reading file '" + fileName + "'");
+		}
+		
+	}
 	
 	public String[][] getData(){
 		return dataBase;
