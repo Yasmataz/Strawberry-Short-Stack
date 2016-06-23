@@ -80,6 +80,8 @@ public class Main {
 	/*
 	 * @params nothing
 	 * @return nothing
+	 * @exception IOException On input error.
+	 * @see IOException
 	 * Determines if user wants to add/remove ingredients from pantry
 	 * reads in pantry file
 	 */
@@ -288,6 +290,8 @@ public class Main {
 	/*
 	 * @params nothing
 	 * @return nothing
+	 * @exception IOException On input error.
+	 * @see IOException
 	 * Searches for index to be removed and sends to remove method
 	 */
 	public static void removeIngredient() {
