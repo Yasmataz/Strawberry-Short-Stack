@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.ListIterator;
 import java.util.Scanner;
 import java.awt.*;
 import java.awt.event.*;
@@ -73,8 +74,15 @@ public class Main {
 			i++;
 		}
 		getRecipes(missingRecipeIndex); //prints all recipes in the array
+		viewShoppingList();
 	}
 	
+	/*
+	 * @params nothing
+	 * @return nothing
+	 * Determines if user wants to add/remove ingredients from pantry
+	 * reads in pantry file
+	 */
 	public static void loadIngredients() {
 		Scanner in = new Scanner(System.in);
 		System.out.println("Intredients: ");
@@ -108,8 +116,14 @@ public class Main {
 			e.printStackTrace();
 		}
 	}
-
-	public static void addIngredients() { // Appends ingredients to a file
+	
+	/*
+	 * Appends ingredients to pantry file
+	 * updates arrays
+	 * @exception IOException On input error.
+	 * @see IOException
+	 */
+	public static void addIngredients() { 
 		Scanner in = new Scanner(System.in);
 		String key = "";
 		try {
@@ -139,7 +153,12 @@ public class Main {
 		}
 	}
 
-	public static void searchIngredient(String ingredient) {// finds and sets all searched ingredients to null
+	/*
+	 * @params ingredient
+	 * @return nothing
+	 * finds and sets all searched ingredients to null
+	 */
+	public static void searchIngredient(String ingredient) { 
 		for (int i = 0; i < dataBase.length; i++) {
 			for (int j = 0; j < dataBase[0].length; j++) {
 				if (dataBase[i][j] != null && dataBase[i][j].equals(ingredient)) {
@@ -149,7 +168,12 @@ public class Main {
 		}
 	}
 
-	public static int searchRecipe(int start) {// Returns i index of recipies with all null arrays
+	/*
+	 * @params start
+	 * @return int
+	 * Returns i index of recipies with all null arrays
+	 */
+	public static int searchRecipe(int start) {
 		for (int i = start; i < dataBase.length; i++) {
 			line++;
 			A: for (int j = 0; j < 19; j++) {
@@ -163,7 +187,12 @@ public class Main {
 		return -1;
 	}
 
-	public static int suggestedRecipes(int start) {// Finds all recipes with 1 missing ingredient
+	/*
+	 * @params start
+	 * @return int
+	 * Returns i index of recipies with 1 missing ingredient
+	 */
+	public static int suggestedRecipes(int start) {
 		int missingCnt = 0;// Number of missing ingredients
 		missingIng = "";// The missing ingredient
 		for (int i = start; i < dataBase.length; i++) {
@@ -185,14 +214,24 @@ public class Main {
 		}
 		return -1;
 	}
-
-	public static void getRecipes(int recipeIndex[]) { // prints the recipes at recipeIndex
+	
+	/*
+	 * @params recipeIndex[]
+	 * @return nothing
+	 * prints the recipes at recipeIndex
+	 */
+	public static void getRecipes(int recipeIndex[]) { 
 		for (int i = 0; i < recipes.length; i++) {
 			if (recipeIndex[i] != -1)
 				System.out.println(recipes[recipeIndex[i]]);
 		}
 	}
 
+	/*
+	 * @params nothing
+	 * @return nothing
+	 * adds ingredients to write to file to an array, and calls write method
+	 */
 	public static void addRecipeIngredients() {
 		String[] ingredients = new String[20];
 		Scanner in = new Scanner(System.in);
@@ -211,7 +250,12 @@ public class Main {
 		addRecipeInstructions();
 	}
 
-	public static void searchRecipe() {//Searches for recipe based on search name
+	/*
+	 * @params nothing
+	 * @return nothing
+	 * Searches for recipe based on search name
+	 */
+	public static void searchRecipe() {
 		Scanner in = new Scanner(System.in);
 		String search = in.nextLine();
 		for (int i = 0; i < dataBase.length; i++) {
@@ -229,6 +273,11 @@ public class Main {
 		}
 	}
 	
+	/*
+	 * @params nothing
+	 * @return nothing
+	 * send instructions to be written to write method
+	 */
 	public static void addRecipeInstructions() {
 		Scanner in = new Scanner(System.in);
 		System.out.println("Enter instructions");
@@ -236,6 +285,11 @@ public class Main {
 		read1.writeRecipe(instructions);
 	}
 	
+	/*
+	 * @params nothing
+	 * @return nothing
+	 * Searches for index to be removed and sends to remove method
+	 */
 	public static void removeIngredient() {
 		System.out.println("Remove ingredient");
 		Scanner in = new Scanner(System.in);
@@ -271,5 +325,26 @@ public class Main {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/*
+	 * @params nothing
+	 * @return nothing
+	 * reads through shopping list
+	 */
+	public static void viewShoppingList() {
+		ListIterator<String> listIterator = shoppingList.listIterator();
+		 while (listIterator.hasNext()) {
+	            System.out.println(listIterator.next());
+	        }
+	}
+	
+	/*
+	 * @params nothing
+	 * @return nothing
+	 * removes item from shopping list
+	 */
+	public static void removeFromShoppingList(String toRemove) {
+		shoppingList.remove(toRemove);
 	}
 }

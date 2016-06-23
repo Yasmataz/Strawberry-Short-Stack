@@ -29,12 +29,8 @@ public class ReadIn {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		//readIngredient();
-		//readRecipe();
-		//	readCsv();
-		//readRecipe();
-		//readIngredient(0);
 		
+		//readCsvIngredient();
 		//readCsvRecipe();
 		readIngredient(0);
 		readRafRecipe(0);
@@ -60,7 +56,7 @@ public class ReadIn {
 	}
 	
 	public static void writeIngredients(String[] ingredients) {// Writes to binary RAF file
-		String fileName = "InterSearch.txt";
+		String fileName = "pantryRaf.txt";
 		try {
 			RandomAccessFile raf = new RandomAccessFile(fileName, "rw");
 			raf.seek(raf.length());
