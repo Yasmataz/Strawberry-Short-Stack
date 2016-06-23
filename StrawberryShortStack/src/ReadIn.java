@@ -8,28 +8,13 @@ import java.io.RandomAccessFile;
 import java.nio.file.*;
 import java.util.Arrays;
 import java.util.Scanner;
+import java.io.*;
 
 public class ReadIn {
 	private static String[][] dataBase;
 	private static String[] recipes;
 
-	/*public static void main(String[] args) {
-		LineNumberReader lnr;
-		try {
-			lnr = new LineNumberReader(new FileReader("DataBase.txt"));
-			lnr.skip(Long.MAX_VALUE);
-			dataBase = new String[lnr.getLineNumber() + 1][20];
-			recipes = new String[10];
-			lnr.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		readIngredient();
-		readRecipe();
-	}*/
-	
+		
 	public ReadIn() {
 	//public static void main(String[] args) {
 		LineNumberReader lnr;
@@ -47,8 +32,12 @@ public class ReadIn {
 		//readIngredient();
 		//readRecipe();
 		//	readCsv();
-		readRecipe();
+		//readRecipe();
+		//readIngredient(0);
+		
+		//readCsvRecipe();
 		readIngredient(0);
+		readRafRecipe(0);
 	}
 	
 	private static void readCsvIngredient() {//reads in books from text file
@@ -111,7 +100,7 @@ public class ReadIn {
 	}
 	
 	private static void readIngredient(int seek) {//Reads from RAF file
-		String fileName = "InterSearch.txt";
+		String fileName = "pantryRaf.txt";
 		try {
 			RandomAccessFile raf = new RandomAccessFile(fileName, "rw");
 			raf.seek(seek);
@@ -145,45 +134,30 @@ public class ReadIn {
 
 	}
 	
-	private static void readRecipe() {
-		String csvFile = "instructions.txt";
-		BufferedReader br = null;
-		String line = "";
-		try {
-			br = new BufferedReader(new FileReader(csvFile));
-			for (int i = 0; i < recipes.length; i++) {
-				if ((line = br.readLine()) != null) {
-					recipes[i] = line;
-				}
-			}
-			System.out.println(Arrays.toString(recipes));
-			br.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	private static void readRecipe(int seek) {
-		String fileName = "InterSearch.txt";
+	private static void readRafRecipe(int seek) {//Reads Raf file and saves to recipes array
+		String fileName = "InstructionsRaf.txt";
 		try {
 			RandomAccessFile raf = new RandomAccessFile(fileName, "rw");
 			raf.seek(seek);
 			String temp = "";
-			for (int k = 0; k < 500; k++) {//when youre inefficient af
+			int index = 0;
+			boolean nextRecipe = true; //have you reached the next recipe?
+			for (int k = 0; k < raf.length()/2; k++) {
 				char nextChar = raf.readChar();
 				if (nextChar != ('*')) {
+					nextRecipe = true;
 					temp = temp + nextChar;
 				}
+				else{
+					if(nextRecipe) {
+						nextRecipe = false;
+						recipes[index] = temp.trim();
+						temp = "";
+						index++;
+					}
+				}
 			}
-			//System.out.println(temp.trim());
-			if(temp.trim().equals(""))
-			//	dataBase[k][i] = null;
-			//else
-			//	dataBase[k][i] = temp.trim();
-			temp = "";
-			
+			System.out.println(Arrays.toString(recipes));
 		} catch (FileNotFoundException e) {
 			System.out.println("file not found");
 			e.printStackTrace();
@@ -193,7 +167,8 @@ public class ReadIn {
 		}
 	}
 
-	private static void readCsvRecipe() {//reads in books from text file
+	
+	private static void readCsvRecipe() {//reads in recipe from text file
 		String fileName = "Instructions.txt";
 		BufferedReader br = null;
 		String line = "";
@@ -213,8 +188,9 @@ public class ReadIn {
 
 	}
 
+	
 	public static void writeRecipe(String instructions) {// Writes to binary RAF file
-		String fileName = "InterSearch.txt";
+		String fileName = "InstructionsRAF.txt";
 		try {
 			RandomAccessFile raf = new RandomAccessFile(fileName, "rw");
 			raf.seek(raf.length());
@@ -225,7 +201,7 @@ public class ReadIn {
 				stringLength = 500;
 			else {
 				pading = 500-stringLength;
-				raf.writeUTF(instructions);
+				raf.writeChars(instructions);
 			}
 			
 			for (int i = 0; i < pading; i++) {
@@ -242,12 +218,13 @@ public class ReadIn {
 
 	}
 	
+	
 	public String[][] getData(){
 		return dataBase;
 	}
 	
+	
 	public String[] getRecipes(){
 		return recipes;
 	}
-	
 }

@@ -62,6 +62,7 @@ public class Main {
 			if (pos != -1) {
 				System.out.println("suggested: ");
 				System.out.println(dataBase[pos][0]);
+				System.out.println("Missing Ingredient: " + missingIng);
 				missingRecipeIndex[i] = pos;
 				
 				System.out.println("Add ingredient to shopping list? y/n");
@@ -120,21 +121,22 @@ public class Main {
 			while (!key.equals("end")) {
 				System.out.println("enter Ingredient ");
 				key = in.nextLine();
-				// if file doesnt exists, then create it
-				if (!file.exists())
+				
+				if (!file.exists()) // if file doesnt exists, then create it
 					file.createNewFile();
 				if (!key.equals("end")) {
 					bw.append(key+",");
-					//bw.append("\n");
+					for (int i = 0; i < pantry.length; i++) {
+						if(pantry[i] == null)
+							pantry[i] = key;
+					}
 				}
-				//searchIngredient(key);
 			}
 			bw.close();
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		//in.close();
 	}
 
 	public static void searchIngredient(String ingredient) {// finds and sets all searched ingredients to null
@@ -177,7 +179,6 @@ public class Main {
 				}
 				if (j == 18 && missingCnt == 1) {
 					interfacing.addToShoppingList(missingIng);
-					System.out.println("missing " + missingIng);
 					return i; // returns index of recipe with missing ingredient
 				}
 			}
