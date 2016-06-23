@@ -190,7 +190,7 @@ public class ReadIn {
 
 	
 	public static void writeRecipe(String instructions) {// Writes to binary RAF file
-		String fileName = "InstructionsRAF.txt";
+		String fileName = "InstructionsRaf.txt";
 		try {
 			RandomAccessFile raf = new RandomAccessFile(fileName, "rw");
 			raf.seek(raf.length());
@@ -219,7 +219,7 @@ public class ReadIn {
 	}
 	
 	public void removeRecipe(int index) {
-		String fileName = "InstructionsRaf.pld";
+		String fileName = "InstructionsRaf.txt";
 		try {
 			RandomAccessFile raf = new RandomAccessFile(fileName, "rw");
 			raf.seek(index*(raf.length()/recipes.length));
@@ -231,6 +231,20 @@ public class ReadIn {
 			System.out.println("Unable to open file '" + fileName + "'");
 		} catch (IOException ex) {
 			System.out.println("Error reading file '" + fileName + "'");
+		}
+		
+		String fileName2 = "DataBase.txt";
+		try {
+			RandomAccessFile raf = new RandomAccessFile(fileName2, "rw");
+			raf.seek(index*(raf.length()/recipes.length));
+			for (int i = 0; i < 500; i++) {
+				raf.writeChar('*');
+			}
+			
+		} catch (FileNotFoundException ex) {
+			System.out.println("Unable to open file '" + fileName2 + "'");
+		} catch (IOException ex) {
+			System.out.println("Error reading file '" + fileName2 + "'");
 		}
 		
 	}
